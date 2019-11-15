@@ -1,0 +1,10 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Forum.Infra.Repositories
+{
+    class _
+    {
+    }
+}
