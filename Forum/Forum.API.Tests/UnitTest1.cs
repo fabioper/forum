@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace Forum.Web.Tests
+namespace Forum.API.Tests
 {
     public class UnitTest1
     {
