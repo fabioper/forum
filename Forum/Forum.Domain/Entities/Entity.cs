@@ -2,14 +2,14 @@
 
 namespace Forum.Domain.Entities
 {
-    public abstract class AbstractEntity
+    public abstract class Entity
     {
         [Key]
         public long Id { get; private set; }
 
         public override bool Equals(object obj)
         {
-            var other = obj as AbstractEntity;
+            var other = obj as Entity;
 
             if (ReferenceEquals(other, null))
                 return false;
@@ -26,7 +26,7 @@ namespace Forum.Domain.Entities
             return Id == other.Id;
         }
 
-        public static bool operator ==(AbstractEntity a, AbstractEntity b)
+        public static bool operator ==(Entity a, Entity b)
         {
             if (a is null && b is null)
                 return true;
@@ -37,7 +37,7 @@ namespace Forum.Domain.Entities
             return a.Equals(b);
         }
 
-        public static bool operator !=(AbstractEntity a, AbstractEntity b) => !(a == b);
+        public static bool operator !=(Entity a, Entity b) => !(a == b);
 
         public override int GetHashCode() => (GetType().ToString() + Id).GetHashCode();
     }

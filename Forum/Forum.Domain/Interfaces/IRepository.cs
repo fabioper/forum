@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Forum.Domain.Interfaces
 {
-    public interface IRepository<T> where T : AbstractEntity
+    public interface IRepository<T> where T : Entity
     {
         Task<IEnumerable<T>> GetAllAsync();
 
