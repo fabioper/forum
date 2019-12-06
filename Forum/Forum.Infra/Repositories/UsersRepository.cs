@@ -4,11 +4,13 @@ using Forum.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Forum.Infra.Repositories
 {
-    public class UsersRepository : IUserRepository
+    public class UsersRepository : IUsersRepository
     {
         private readonly ApplicationDbContext _context;
         private readonly DbSet<User> users;
@@ -33,6 +35,23 @@ namespace Forum.Infra.Repositories
 
         public async Task<User> GetByIdAsync(long id) =>
             await users.FirstOrDefaultAsync(u => u.Id == id);
+        public async Task<User> GetCurrentUser(ClaimsPrincipal user)
+        {
+            var currentUser = await users.FirstOrDefaultAsync(u => u.UserName == user.Identity.Name);
+
+            if (currentUser != null)
+                return currentUser;
+
+            var newUser = new User
+            {
+                UserName = user.Identity.Name,
+                Email = user.Claims.ToList().FirstOrDefault(c => c.Type == "email").Value
+            };
+
+            await AddAsync(newUser);
+
+            return await GetCurrentUser(user);
+        }
 
         public async Task RemoveAsync(long id) => throw new NotImplementedException();
 

@@ -1,4 +1,6 @@
 using Forum.Data.Contexts;
+using Forum.Domain.Interfaces;
+using Forum.Infra.Repositories;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +33,14 @@ namespace Forum.API
                     options.Authority = "https://localhost:44386";
                     options.ApiName = "ForumAPI";
                 });
+
+            services.AddControllers()
+                    .AddNewtonsoftJson(x => {
+                        x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    });
+
+            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<ITopicsRepository, TopicsRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -40,9 +50,10 @@ namespace Forum.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseAuthentication();
-
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
         }

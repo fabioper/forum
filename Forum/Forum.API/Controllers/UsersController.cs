@@ -1,22 +1,33 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Forum.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Forum.API.Controllers
 {
-    [Route("api/users")]
+    [Route("api/")]
     [ApiController]
     [Authorize]
     public class UsersController : ControllerBase
     {
-        [HttpGet("")]
-        public IActionResult Index()
+        private readonly IUsersRepository _usersRepository;
+
+        public UsersController(IUsersRepository usersRepository)
         {
-            var user = HttpContext.User;
+            _usersRepository = usersRepository;
+        }
+
+        [Route("profile")]
+        public async Task<IActionResult> Profile()
+        {
+            var currentUser = await _usersRepository.GetCurrentUser(HttpContext.User);
 
             return Ok(new
             {
-                message = "ok"
+                user_name = currentUser.UserName,
+                user_email = currentUser.Email
             });
         }
     }

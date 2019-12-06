@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using Forum.Domain.Entities;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Forum.IdentityServer.ViewModels;
-using Forum.Infra.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -65,11 +64,7 @@ namespace Forum.IdentityServer.Controllers
 
             if (result.Succeeded)
             {
-                var domainUser = new User
-                {
-                    Email = user.Email,
-                    UserName = user.UserName
-                };
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Email, vm.Email));
 
                 var signInResult = await _signInManager.PasswordSignInAsync(user, vm.Password, false, false);
 
