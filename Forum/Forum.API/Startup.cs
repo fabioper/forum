@@ -1,4 +1,7 @@
+using AutoMapper;
+using Forum.API.ViewModels;
 using Forum.Data.Contexts;
+using Forum.Domain.Entities;
 using Forum.Domain.Interfaces;
 using Forum.Infra.Repositories;
 using IdentityServer4.AccessTokenValidation;
@@ -39,8 +42,20 @@ namespace Forum.API
                         x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                     });
 
+            var autoMapperConfig = new AutoMapper.MapperConfiguration(config =>
+            {
+                config.CreateMap<CreateTopicViewModel, Topic>();
+                config.CreateMap<CreateGategoryViewModel, Category>();
+                config.CreateMap<CreateSectionViewModel, Section>();
+            });
+
+            IMapper mapper = autoMapperConfig.CreateMapper();
+
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<ITopicsRepository, TopicsRepository>();
+            services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            services.AddScoped<ISectionsRepository, SectionsRepository>();
+            services.AddSingleton(mapper);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

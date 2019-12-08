@@ -16,6 +16,8 @@ namespace Forum.Domain.Interfaces
 
         Task<T> UpdateAsync(T entity);
 
-        Task RemoveAsync(long id);
+        Task RemoveAsync(T entity);
+
+        Task<bool> Contains(long id);
     }
 }

@@ -1,9 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Forum.Domain.Entities
 {
     public abstract class Entity
     {
+        public Entity()
+        {
+            CreatedAt = DateTime.UtcNow;
+            UpdatedAt = CreatedAt;
+        }
+
         [Key]
         public long Id { get; private set; }
 
@@ -40,5 +47,9 @@ namespace Forum.Domain.Entities
         public static bool operator !=(Entity a, Entity b) => !(a == b);
 
         public override int GetHashCode() => (GetType().ToString() + Id).GetHashCode();
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
     }
 }

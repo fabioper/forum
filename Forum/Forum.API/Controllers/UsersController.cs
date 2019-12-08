@@ -1,4 +1,5 @@
-﻿using Forum.Domain.Interfaces;
+﻿using Forum.API.ViewModels;
+using Forum.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -24,10 +25,19 @@ namespace Forum.API.Controllers
         {
             var currentUser = await _usersRepository.GetCurrentUser(HttpContext.User);
 
-            return Ok(new
+            return Ok(new ResponseMessage
             {
-                user_name = currentUser.UserName,
-                user_email = currentUser.Email
+                Code = 200,
+                Data = new
+                {
+                    user_id = currentUser.Id,
+                    avatar_uri = currentUser.AvatarUri,
+                    username = currentUser.UserName,
+                    email = currentUser.Email,
+                    topics = currentUser.Topics,
+                    created_at = currentUser.CreatedAt,
+                    updated_at = currentUser.UpdatedAt
+                }
             });
         }
     }

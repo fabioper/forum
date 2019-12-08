@@ -1,5 +1,7 @@
-﻿using Forum.Domain.Entities;
+﻿using Forum.Data.Contexts;
+using Forum.Domain.Entities;
 using Forum.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,34 +11,58 @@ namespace Forum.Infra.Repositories
 {
     public class TopicsRepository : ITopicsRepository
     {
-        public Task<Topic> AddAsync(Topic entity)
+        private readonly ApplicationDbContext _context;
+        private readonly DbSet<Topic> _topics;
+
+        public TopicsRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+            _topics = context.Topics;
         }
 
-        public Task<IEnumerable<Topic>> GetAllAsync()
+        public async Task<Topic> AddAsync(Topic entity)
         {
-            throw new NotImplementedException();
+            await _topics.AddAsync(entity);
+            await _context.SaveChangesAsync();
+
+            return entity;
         }
 
-        public Task<IEnumerable<Topic>> GetByAsync(string keyword)
+        public async Task<bool> Contains(long id)
         {
-            throw new NotImplementedException();
+            var topic = await GetByIdAsync(id);
+
+            return (topic != null);
         }
 
-        public Task<Topic> GetByIdAsync(long id)
+        public async Task<IEnumerable<Topic>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await Task.FromResult(_topics);
         }
 
-        public Task RemoveAsync(long id)
+        public async Task<Topic> GetByIdAsync(long id)
         {
-            throw new NotImplementedException();
+            return await _topics.FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public Task<Topic> UpdateAsync(Topic entity)
+        public Task<IEnumerable<Topic>> GetByAsync(string keyword) => throw new NotImplementedException();
+
+        public async Task RemoveAsync(Topic entity)
         {
-            throw new NotImplementedException();
+            _topics.Remove(entity);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Topic> UpdateAsync(Topic entity)
+        {
+            entity.UpdatedAt = DateTime.UtcNow;
+
+            _context.Update(entity);
+
+            await _context.SaveChangesAsync();
+
+            return entity;
         }
     }
 }
