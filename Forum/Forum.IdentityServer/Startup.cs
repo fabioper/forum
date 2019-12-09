@@ -31,7 +31,7 @@ namespace Forum.IdentityServer
                     .AddInMemoryPersistedGrants()
                     .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
                     .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
-                    .AddInMemoryClients(IdentityServerConfig.GetClients())
+                    .AddInMemoryClients(_configuration.GetSection("IdentityServer:Clients"))
                     .AddAspNetIdentity<ApplicationUser>();
 
             services.AddControllersWithViews();
