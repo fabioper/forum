@@ -30,11 +30,7 @@ namespace Forum.API.Controllers
         {
             var sections = await _sectionsRepository.GetAllAsync();
 
-            return Ok(new ResponseMessage
-            {
-                Code = 200,
-                Data = sections
-            });
+            return Ok(sections);
         }
 
         [HttpPost("")]
@@ -42,22 +38,13 @@ namespace Forum.API.Controllers
         public async Task<IActionResult> Index([FromBody] CreateSectionViewModel vm)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new ResponseMessage
-                {
-                    Code = 400,
-                    Message = "Formatação inválida",
-                    Errors = ModelState.Values.Select(v => v.Errors)
-                });
+                return BadRequest(ModelState.Values.Select(v => v.Errors));
 
             var section = _mapper.Map<Section>(vm);
 
             await _sectionsRepository.AddAsync(section);
 
-            return Ok(new ResponseMessage
-            {
-                Code = 200,
-                Message = "Seção adicionada com sucesso"
-            });
+            return Ok();
         }
 
         [HttpGet("{id:long}")]
@@ -66,17 +53,9 @@ namespace Forum.API.Controllers
             var section = await _sectionsRepository.GetByIdAsync(id);
 
             if (section != null)
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Data = section
-                });
+                return Ok(section);
 
-            return NotFound(new ResponseMessage
-            {
-                Code = 404,
-                Message = "Seção não encontrada"
-            });
+            return NotFound();
         }
 
         [HttpPut("{id:long}")]
@@ -89,18 +68,10 @@ namespace Forum.API.Controllers
                 section.Name = vm.Name;
                 await _sectionsRepository.UpdateAsync(section);
 
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Message = $"Seção \"{section.Name}\" atualizada com sucesso"
-                });
+                return Ok();
             }
 
-            return BadRequest(new ResponseMessage
-            {
-                Code = 400,
-                Message = "Seção não encontrada"
-            });
+            return BadRequest();
         }
 
         [HttpDelete("{id:long}")]
@@ -112,18 +83,10 @@ namespace Forum.API.Controllers
             {
                 await _sectionsRepository.RemoveAsync(sectionToBeDeleted);
 
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Message = $"Seção {sectionToBeDeleted.Name} deletada com sucesso"
-                });
+                return Ok();
             }
 
-            return BadRequest(new ResponseMessage
-            {
-                Code = 400,
-                Message = "Seção não encontrada"
-            });
+            return BadRequest();
         }
     }
 }

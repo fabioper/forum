@@ -32,11 +32,7 @@ namespace Forum.API.Controllers
         {
             var categories = await _categoriesRepository.GetAllAsync();
 
-            return Ok(new ResponseMessage
-            {
-                Code = 200,
-                Data = categories
-            });
+            return Ok(categories);
         }
 
         [HttpPost("")]
@@ -44,12 +40,7 @@ namespace Forum.API.Controllers
         public async Task<IActionResult> Index([FromBody] CreateGategoryViewModel vm)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new ResponseMessage
-                {
-                    Code = 400,
-                    Message = "Formatação inválida",
-                    Errors = ModelState.Values.Select(v => v.Errors)
-                });
+                return BadRequest(ModelState.Values.Select(v => v.Errors));
 
             var sectionExist = await _sectionsRepository.Contains(vm.SectionId);
 
@@ -59,18 +50,10 @@ namespace Forum.API.Controllers
 
                 await _categoriesRepository.AddAsync(category);
 
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Message = "Categoria adicionado com sucesso"
-                });
+                return Ok();
             }
 
-            return BadRequest(new ResponseMessage
-            {
-                Code = 400,
-                Message = "Seção não existe"
-            });
+            return BadRequest();
         }
 
         [HttpGet("{id:long}")]
@@ -79,17 +62,9 @@ namespace Forum.API.Controllers
             var category = await _categoriesRepository.GetByIdAsync(id);
 
             if (category != null)
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Data = category
-                });
+                return Ok(category);
 
-            return NotFound(new ResponseMessage
-            {
-                Code = 404,
-                Message = "Categoria não encontrada"
-            });
+            return NotFound();
         }
 
         [HttpPut("{id:long}")]
@@ -105,18 +80,10 @@ namespace Forum.API.Controllers
 
                 await _categoriesRepository.UpdateAsync(category);
 
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Message = $"Categoria \"{category.Name}\" atualizada com sucesso"
-                });
+                return Ok();
             }
 
-            return BadRequest(new ResponseMessage
-            {
-                Code = 400,
-                Message = "Categoria não encontrada"
-            });
+            return BadRequest();
         }
 
         [HttpDelete("{id:long}")]
@@ -128,18 +95,10 @@ namespace Forum.API.Controllers
             {
                 await _categoriesRepository.RemoveAsync(categoryToBeDeleted);
 
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Message = $"Categoria {categoryToBeDeleted.Name} deletada com sucesso"
-                });
+                return Ok();
             }
 
-            return BadRequest(new ResponseMessage
-            {
-                Code = 400,
-                Message = "Categoria não encontrada"
-            });
+            return BadRequest();
         }
     }
 }

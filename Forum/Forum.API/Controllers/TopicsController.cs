@@ -40,11 +40,7 @@ namespace Forum.API.Controllers
         {
             var topics = await _topicsRepository.GetAllAsync();
 
-            return Ok(new ResponseMessage
-            {
-                Code = 200,
-                Data = topics
-            });
+            return Ok(topics);
         }
 
         [HttpPost("")]
@@ -52,12 +48,7 @@ namespace Forum.API.Controllers
         public async Task<IActionResult> Index([FromBody] CreateTopicViewModel vm)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new ResponseMessage
-                {
-                    Code = 400,
-                    Message = "Formatação inválida",
-                    Errors = ModelState.Values.Select(v => v.Errors)
-                });
+                return BadRequest(ModelState.Values.Select(v => v.Errors));
 
             var categoryExist = await _categoriesRepository.Contains(vm.CategoryId);
 
@@ -67,18 +58,10 @@ namespace Forum.API.Controllers
 
                 await _topicsRepository.AddAsync(topic);
 
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Message = "Tópico adicionado com sucesso"
-                });
+                return Ok();
             }
 
-            return BadRequest(new ResponseMessage
-            {
-                Code = 400,
-                Message = "Categoria não existe"
-            });
+            return BadRequest();
         }
 
         [HttpGet("{id:long}")]
@@ -87,17 +70,9 @@ namespace Forum.API.Controllers
             var topic = await _topicsRepository.GetByIdAsync(id);
 
             if (topic != null)
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Data = topic
-                });
+                return Ok(topic);
 
-            return NotFound(new ResponseMessage
-            {
-                Code = 404,
-                Message = "Tópico não encontrado"
-            });
+            return NotFound();
         }
 
         [HttpPut("{id:long}")]
@@ -113,18 +88,10 @@ namespace Forum.API.Controllers
 
                 await _topicsRepository.UpdateAsync(topic);
 
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Message = $"Tópico \"{topic.Title}\" atualizado com sucesso"
-                });
+                return Ok();
             }
 
-            return BadRequest(new ResponseMessage
-            {
-                Code = 400,
-                Message = "Tópico não encontrado"
-            });
+            return BadRequest();
         }
 
         [HttpDelete("{id:long}")]
@@ -136,18 +103,10 @@ namespace Forum.API.Controllers
             {
                 await _topicsRepository.RemoveAsync(topicToBeDeleted);
 
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Message = $"Tópico {topicToBeDeleted.Title} deletado com sucesso"
-                });
+                return Ok();
             }
 
-            return BadRequest(new ResponseMessage
-            {
-                Code = 400,
-                Message = "Tópico não encontrado"
-            });
+            return BadRequest();
         }
 
         [HttpGet("{id:long}/replies)")]
@@ -159,18 +118,10 @@ namespace Forum.API.Controllers
             {
                 var replies = topic.Replies;
 
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Data = replies
-                });
+                return Ok(replies);
             }
 
-            return BadRequest(new ResponseMessage
-            {
-                Code = 400,
-                Message = "Tópico não encontrado"
-            });
+            return BadRequest();
         }
 
         [HttpPost("{id:long}/replies")]
@@ -178,12 +129,7 @@ namespace Forum.API.Controllers
         public async Task<IActionResult> CreateReply(long id, [FromBody] CreateReplyViewModel vm)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new ResponseMessage
-                {
-                    Code = 400,
-                    Message = "Formatação inválida",
-                    Errors = ModelState.Values.Select(v => v.Errors)
-                });
+                return BadRequest(ModelState.Values.Select(v => v.Errors));
 
             var topicExist = await _topicsRepository.Contains(vm.TopicId);
             var userExist = await _topicsRepository.Contains(vm.UserId);
@@ -194,18 +140,10 @@ namespace Forum.API.Controllers
 
                 await _repliesRepository.AddAsync(reply);
 
-                return Ok(new ResponseMessage
-                {
-                    Code = 200,
-                    Message = "Resposta adicionada com sucesso"
-                });
+                return Ok();
             }
 
-            return BadRequest(new ResponseMessage
-            {
-                Code = 400,
-                Message = "Tópico não existe"
-            });
+            return BadRequest();
         }
 
         [HttpGet("{topicId:long}/replies/{replyId:long}")]
@@ -219,26 +157,14 @@ namespace Forum.API.Controllers
 
                 if (reply != null)
                 {
-                    return Ok(new ResponseMessage
-                    {
-                        Code = 200,
-                        Data = reply
-                    });
+                    return Ok(reply);
                 }
 
-                return NotFound(new ResponseMessage
-                {
-                    Code = 404,
-                    Message = "Resposta não encontrada"
-                });
+                return NotFound();
             }
                 
 
-            return NotFound(new ResponseMessage
-            {
-                Code = 404,
-                Message = "Tópico não encontrado"
-            });
+            return NotFound();
         }
 
         [HttpPut("{topicId:long}/replies/{replyId:long}")]
@@ -260,25 +186,13 @@ namespace Forum.API.Controllers
 
                     await _repliesRepository.UpdateAsync(reply);
 
-                    return Ok(new ResponseMessage
-                    {
-                        Code = 200,
-                        Message = $"Resposta \"{reply.Title}\" atualizada com sucesso"
-                    });
+                    return Ok();
                 }
 
-                return BadRequest(new ResponseMessage
-                {
-                    Code = 400,
-                    Message = "Resposta não encontrada"
-                });
+                return BadRequest();
             }
 
-            return BadRequest(new ResponseMessage
-            {
-                Code = 400,
-                Message = "Tópico não encontrado"
-            });
+            return BadRequest();
         }
 
         [HttpPut("{topicId:long}/replies/{replyId:long}")]
@@ -295,25 +209,13 @@ namespace Forum.API.Controllers
                 {
                     await _repliesRepository.RemoveAsync(replyToBeDeleted);
 
-                    return Ok(new ResponseMessage
-                    {
-                        Code = 200,
-                        Message = $"Resposta {replyToBeDeleted.Title} deletado com sucesso"
-                    });
+                    return Ok();
                 }
 
-                return BadRequest(new ResponseMessage
-                {
-                    Code = 400,
-                    Message = "Resposta não encontrada"
-                });
+                return BadRequest();
             }
 
-            return BadRequest(new ResponseMessage
-            {
-                Code = 400,
-                Message = "Tópico não encontrado"
-            });
+            return BadRequest();
         }
     }
 }

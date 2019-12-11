@@ -3,24 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Forum.Domain.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Forum.Client.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IHttpClientFactory _clientFactor;
+        private readonly IHttpClientFactory _clientFactory;
 
         public HomeController(IHttpClientFactory clientFactory)
         {
-            _clientFactor = clientFactory;
+            _clientFactory = clientFactory;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            using (var client = _clientFactory.CreateClient())
+            {
+                var response = await client.GetAsync("https://localhost:44391/api/sections");
+
+                response.EnsureSuccessStatusCode();
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var sections = JsonConvert.DeserializeObject<IEnumerable<Section>>(responseBody);
+
+                return View(sections);
+            }
         }
 
         [Authorize]

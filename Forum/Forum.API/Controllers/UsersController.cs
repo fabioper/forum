@@ -25,10 +25,7 @@ namespace Forum.API.Controllers
         {
             var currentUser = await _usersRepository.GetCurrentUser(HttpContext.User);
 
-            return Ok(new ResponseMessage
-            {
-                Code = 200,
-                Data = new
+            return Ok(new
                 {
                     user_id = currentUser.Id,
                     avatar_uri = currentUser.AvatarUri,
@@ -37,8 +34,7 @@ namespace Forum.API.Controllers
                     topics = currentUser.Topics,
                     created_at = currentUser.CreatedAt,
                     updated_at = currentUser.UpdatedAt
-                }
-            });
+                });
         }
     }
 }
