@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum.IdentityServer.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20191205043630_FixApplicationUser")]
-    partial class FixApplicationUser
+    [Migration("20191211021329_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

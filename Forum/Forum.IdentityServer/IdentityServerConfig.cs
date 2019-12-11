@@ -46,13 +46,13 @@ namespace Forum.IdentityServer
             {
                 new Client
                 {
-                    ClientId = "client_js",
-                    ClientName = "Javascript Client",
-                    ClientUri = "http://localhost:3000",
+                    ClientId = "client_mvc",
+                    ClientName = "MVC Client",
+                    ClientUri = "https://localhost:44356",
                     AllowedGrantTypes = GrantTypes.Code,
-                    RedirectUris = { "http://localhost:3000" },
-                    PostLogoutRedirectUris = { "http://localhost:3000" },
-                    AllowedCorsOrigins = { "http://localhost:3000" },
+                    RedirectUris = { "https://localhost:44356/signin-oidc" },
+                    PostLogoutRedirectUris = { "https://localhost:44356" },
+                    AllowedCorsOrigins = { "https://localhost:44356" },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
