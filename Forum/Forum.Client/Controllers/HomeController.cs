@@ -41,6 +41,13 @@ namespace Forum.Client.Controllers
         [HttpGet("myprofile")]
         public IActionResult MyProfile()
         {
+            // QUANDO PRECISAR DO USUÁRIO ESTAR AUTENTICADO É NECESSÁRIO ENVIAR O TOKEN PARA A API.
+            // PARA PEGAR O TOKEN USA:
+            //
+            // var accessToken = await HttpContext.GetTokenAsync("access_token");
+            //
+            // ENVIA ELE NO HEADER "Authorization" DA REQUISIÇÃO e "Bearer {accessToken}"
+
             return View();
         }
 
