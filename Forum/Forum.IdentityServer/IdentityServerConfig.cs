@@ -51,6 +51,7 @@ namespace Forum.IdentityServer
                     ClientUri = "https://localhost:44356",
                     AllowedGrantTypes = GrantTypes.Code,
                     RedirectUris = { "https://localhost:44356/signin-oidc" },
+                    ClientSecrets = { new Secret("secret".Sha256()) },
                     PostLogoutRedirectUris = { "https://localhost:44356" },
                     AllowedCorsOrigins = { "https://localhost:44356" },
                     AllowedScopes =

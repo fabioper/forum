@@ -13,11 +13,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-
-  <ItemGroup>
     <ProjectReference Include="..\Forum.Domain\Forum.Domain.csproj" />
   </ItemGroup>
 

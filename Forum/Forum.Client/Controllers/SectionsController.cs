@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
+using Forum.Client.Models;
 using Forum.Domain.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -12,11 +16,12 @@ using Newtonsoft.Json.Linq;
 
 namespace Forum.Client.Controllers
 {
-    public class HomeController : Controller
+    [Route("")]
+    public class SectionsController : Controller
     {
         private readonly IHttpClientFactory _clientFactory;
 
-        public HomeController(IHttpClientFactory clientFactory)
+        public SectionsController(IHttpClientFactory clientFactory)
         {
             _clientFactory = clientFactory;
         }
@@ -37,26 +42,31 @@ namespace Forum.Client.Controllers
             }
         }
 
+        [HttpGet("new")]
         [Authorize]
-        [HttpGet("myprofile")]
-        public IActionResult MyProfile()
+        public async Task<IActionResult> Create()
         {
-            // QUANDO PRECISAR DO USUÁRIO ESTAR AUTENTICADO É NECESSÁRIO ENVIAR O TOKEN PARA A API.
-            // PARA PEGAR O TOKEN USA:
-            //
-            // var accessToken = await HttpContext.GetTokenAsync("access_token");
-            //
-            // ENVIA ELE NO HEADER "Authorization" DA REQUISIÇÃO e "Bearer {accessToken}"
-
             return View();
         }
 
+        [HttpPost("new")]
         [Authorize]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Create(CreateSectionViewModel vm)
         {
-            await HttpContext.SignOutAsync();
+            if (!ModelState.IsValid) return View(vm);
 
-            return RedirectToAction(nameof(Index));
+            using (var client = _clientFactory.CreateClient())
+            {
+                var accessToken = await HttpContext.GetTokenAsync("access_token");
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                var response = await client.PostAsync("https://localhost:44391/api/sections", 
+                                                      new StringContent(JsonConvert.SerializeObject(vm), Encoding.UTF8, "application/json"));
+
+                response.EnsureSuccessStatusCode();
+
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 
 namespace Forum.API
 {
@@ -30,10 +31,16 @@ namespace Forum.API
                 options.UseSqlServer(_configuration.GetConnectionString("ForumConnection"));
             });
 
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+            services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+            })
                 .AddIdentityServerAuthentication(options =>
                 {
                     options.Authority = "https://localhost:44386";
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
                     options.ApiName = "ForumAPI";
                 });
 
@@ -42,7 +49,7 @@ namespace Forum.API
                         x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                     });
 
-            var autoMapperConfig = new AutoMapper.MapperConfiguration(config =>
+            var autoMapperConfig = new MapperConfiguration(config =>
             {
                 config.CreateMap<CreateTopicViewModel, Topic>();
                 config.CreateMap<CreateGategoryViewModel, Category>();
@@ -62,6 +69,7 @@ namespace Forum.API
         {
             if (env.IsDevelopment())
             {
+                IdentityModelEventSource.ShowPII = true;
                 app.UseDeveloperExceptionPage();
             }
 

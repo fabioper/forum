@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -22,6 +23,8 @@ namespace Forum.Client
 
         public void ConfigureServices(IServiceCollection services)
         {
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = "Cookies";
@@ -33,6 +36,7 @@ namespace Forum.Client
                     options.Authority = "https://localhost:44386";
                     options.RequireHttpsMetadata = false;
                     options.ClientId = "client_mvc";
+                    options.ClientSecret = "secret";
                     options.ResponseType = "code";
                     options.SaveTokens = true;
                 });
@@ -53,13 +57,12 @@ namespace Forum.Client
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
+            app.UseHttpsRedirection();
             app.UseRouting();
-
             app.UseAuthentication();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
