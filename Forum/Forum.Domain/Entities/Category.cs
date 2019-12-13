@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,5 +27,6 @@ namespace Forum.Domain.Entities
         public Section Section { get; set; }
 
         public ICollection<Topic> Topics { get; set; }
+
     }
 }

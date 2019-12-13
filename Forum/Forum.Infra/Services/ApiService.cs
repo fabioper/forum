@@ -17,7 +17,7 @@ namespace Forum.Infra.Services
 
         public ApiService(HttpClient client)
         {
-            client.BaseAddress = new Uri("https://localhost:44391/api/", UriKind.Absolute);
+            client.BaseAddress = new Uri("https://localhost:44317/api/", UriKind.Absolute);
             Client = client;
         }
 

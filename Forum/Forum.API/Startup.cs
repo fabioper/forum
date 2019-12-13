@@ -34,7 +34,7 @@ namespace Forum.API
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "https://localhost:44386";
+                    options.Authority = "https://localhost:44394";
                     options.RequireHttpsMetadata = true;
                     options.SaveToken = true;
                     options.ApiName = "ForumAPI";

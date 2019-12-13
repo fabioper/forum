@@ -36,13 +36,13 @@ namespace Forum.IdentityServer
                 {
                     ClientId = "client_mvc",
                     ClientName = "MVC Client",
-                    ClientUri = "https://localhost:44356",
+                    ClientUri = "https://localhost:44395",
                     AllowedGrantTypes = GrantTypes.Code,
                     RequirePkce = true,
-                    RedirectUris = { "https://localhost:44356/signin-oidc" },
+                    RedirectUris = { "https://localhost:44395/signin-oidc" },
                     ClientSecrets = { new Secret("secret".Sha256()) },
-                    PostLogoutRedirectUris = { "https://localhost:44356/signout-callback-oidc" },
-                    AllowedCorsOrigins = { "https://localhost:44356" },
+                    PostLogoutRedirectUris = { "https://localhost:44395/signout-callback-oidc" },
+                    AllowedCorsOrigins = { "https://localhost:44395" },
                     AllowOfflineAccess = true,
                     AccessTokenLifetime = (int)TimeSpan.FromHours(5).TotalSeconds,
                     AllowedScopes =

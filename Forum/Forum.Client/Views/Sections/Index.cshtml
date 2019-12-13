@@ -11,21 +11,23 @@
 </p>
 <table class="table">
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-action="Details" asp-controller="Sections">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-action="CategoriesIndex" asp-controller="Categories">
                     @Html.DisplayFor(modelItem => item.Name)
-                </a>
-
-                <ul>
-                    @foreach (var category in item.Categories)
-                    {
-                        <li>@category.Name</li>
-                    }
-                </ul>
-            </td>
-        </tr>
-}
+                    </a>
+                    <ul>
+                        @foreach (var category in item.Categories)
+                        {
+                            <li>
+                                @category.Name
+                            </li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

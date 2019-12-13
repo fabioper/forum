@@ -34,7 +34,7 @@ namespace Forum.Client
                 .AddCookie("Cookies")
                 .AddOpenIdConnect("oidc", options =>
                 {
-                    options.Authority = "https://localhost:44386";
+                    options.Authority = "https://localhost:44394";
                     options.RequireHttpsMetadata = true;
                     options.ClientId = "client_mvc";
                     options.ClientSecret = "secret";
