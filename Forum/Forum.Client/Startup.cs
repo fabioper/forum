@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using Forum.Infra.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,14 +35,15 @@ namespace Forum.Client
                 .AddOpenIdConnect("oidc", options =>
                 {
                     options.Authority = "https://localhost:44386";
-                    options.RequireHttpsMetadata = false;
+                    options.RequireHttpsMetadata = true;
                     options.ClientId = "client_mvc";
                     options.ClientSecret = "secret";
                     options.ResponseType = "code";
                     options.SaveTokens = true;
+                    options.Scope.Add("ForumAPI");
                 });
 
-            services.AddHttpClient();
+            services.AddHttpClient<ApiService>();
 
             services.AddControllersWithViews();
         }
@@ -60,7 +62,7 @@ namespace Forum.Client
 
             app.UseStaticFiles();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

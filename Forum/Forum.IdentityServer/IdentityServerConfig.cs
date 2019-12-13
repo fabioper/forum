@@ -21,23 +21,11 @@ namespace Forum.IdentityServer
         public static IEnumerable<ApiResource> GetApiResources() =>
             new List<ApiResource>
             {
-                new ApiResource
+                new ApiResource("ForumAPI", new[]
                 {
-                    Name = "ForumAPI",
-                    UserClaims =
-                    {
-                        JwtClaimTypes.Name,
-                        JwtClaimTypes.Email
-                    },
-                    Scopes =
-                    {
-                        new Scope
-                        {
-                            Name = "forumapi",
-                            DisplayName = "Full Acess to Forum API data"
-                        }
-                    }
-                }
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.Email
+                })
             };
 
 
@@ -50,16 +38,19 @@ namespace Forum.IdentityServer
                     ClientName = "MVC Client",
                     ClientUri = "https://localhost:44356",
                     AllowedGrantTypes = GrantTypes.Code,
+                    RequirePkce = true,
                     RedirectUris = { "https://localhost:44356/signin-oidc" },
                     ClientSecrets = { new Secret("secret".Sha256()) },
-                    PostLogoutRedirectUris = { "https://localhost:44356" },
+                    PostLogoutRedirectUris = { "https://localhost:44356/signout-callback-oidc" },
                     AllowedCorsOrigins = { "https://localhost:44356" },
+                    AllowOfflineAccess = true,
+                    AccessTokenLifetime = (int)TimeSpan.FromHours(5).TotalSeconds,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
-                        "forumapi"
+                        "ForumAPI"
                     },
                     RequireClientSecret = false,
                     RequireConsent = false

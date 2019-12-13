@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Forum.Client.Models;
 using Forum.Domain.Entities;
+using Forum.Infra.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,27 +20,18 @@ namespace Forum.Client.Controllers
     [Route("")]
     public class SectionsController : Controller
     {
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly ApiService _api;
 
-        public SectionsController(IHttpClientFactory clientFactory)
+        public SectionsController(ApiService api)
         {
-            _clientFactory = clientFactory;
+            _api = api;
         }
 
         public async Task<IActionResult> Index()
         {
-            using (var client = _clientFactory.CreateClient())
-            {
-                var response = await client.GetAsync("https://localhost:44391/api/sections");
+            var sections = await _api.GetSections();
 
-                response.EnsureSuccessStatusCode();
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-
-                var sections = JsonConvert.DeserializeObject<IEnumerable<Section>>(responseBody);
-
-                return View(sections);
-            }
+            return View(sections);
         }
 
         [HttpGet("new")]
@@ -55,18 +47,10 @@ namespace Forum.Client.Controllers
         {
             if (!ModelState.IsValid) return View(vm);
 
-            using (var client = _clientFactory.CreateClient())
-            {
-                var accessToken = await HttpContext.GetTokenAsync("access_token");
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            await _api.PostSection(vm, accessToken);
 
-                var response = await client.PostAsync("https://localhost:44391/api/sections", 
-                                                      new StringContent(JsonConvert.SerializeObject(vm), Encoding.UTF8, "application/json"));
-
-                response.EnsureSuccessStatusCode();
-
-                return RedirectToAction(nameof(Index));
-            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

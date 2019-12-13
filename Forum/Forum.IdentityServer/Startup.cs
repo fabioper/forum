@@ -44,9 +44,10 @@ namespace Forum.IdentityServer
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseIdentityServer();
 
             app.UseStaticFiles();
+
+            app.UseIdentityServer();
 
             app.UseRouting();
 

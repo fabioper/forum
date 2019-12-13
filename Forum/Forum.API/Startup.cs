@@ -31,17 +31,14 @@ namespace Forum.API
                 options.UseSqlServer(_configuration.GetConnectionString("ForumConnection"));
             });
 
-            services.AddAuthentication(o =>
-            {
-                o.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
-            })
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
                     options.Authority = "https://localhost:44386";
-                    options.RequireHttpsMetadata = false;
+                    options.RequireHttpsMetadata = true;
                     options.SaveToken = true;
                     options.ApiName = "ForumAPI";
+                    options.ApiSecret = "secret";
                 });
 
             services.AddControllers()
@@ -62,6 +59,7 @@ namespace Forum.API
             services.AddScoped<ITopicsRepository, TopicsRepository>();
             services.AddScoped<ICategoriesRepository, CategoriesRepository>();
             services.AddScoped<ISectionsRepository, SectionsRepository>();
+            services.AddScoped<IRepliesRepository, RepliesRepository>();
             services.AddSingleton(mapper);
         }
 
