@@ -17,7 +17,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Forum.Client.Controllers
 {
-    [Route("")]
+    [Route("sections")]
     public class SectionsController : Controller
     {
         private readonly ApiService _api;
@@ -25,13 +25,6 @@ namespace Forum.Client.Controllers
         public SectionsController(ApiService api)
         {
             _api = api;
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            var sections = await _api.GetSections();
-
-            return View(sections);
         }
 
         [HttpGet("new")]
@@ -43,14 +36,14 @@ namespace Forum.Client.Controllers
 
         [HttpPost("new")]
         [Authorize]
-        public async Task<IActionResult> Create(CreateSectionViewModel vm)
+        public async Task<IActionResult> Create(CreateSectionViewModel vm, string redirectuUri)
         {
             if (!ModelState.IsValid) return View(vm);
 
             var accessToken = await HttpContext.GetTokenAsync("access_token");
             await _api.PostSection(vm, accessToken);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Categories");
         }
     }
 }

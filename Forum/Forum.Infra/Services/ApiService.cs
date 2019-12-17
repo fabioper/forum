@@ -108,5 +108,42 @@ namespace Forum.Infra.Services
 
             response.EnsureSuccessStatusCode();
         }
+
+        public async Task<Topic> GetTopicById(long id)
+        {
+            var response = await Client.GetAsync($"topics/{id}");
+
+            response.EnsureSuccessStatusCode();
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Topic>(responseBody);
+        }
+
+        public async Task PostReply(object content, string token)
+        {
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await Client.PostAsync("replies", new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json"));
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<User> GetCurrentLoggedUser(string token)
+        {
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await Client.GetAsync("profile");
+
+            response.EnsureSuccessStatusCode();
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<User>(responseBody);
+        }
+
+        public async Task UpdateUserInfo(object content, string token)
+        {
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await Client.PutAsync("replies", new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json"));
+
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

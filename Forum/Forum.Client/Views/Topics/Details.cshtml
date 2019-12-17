@@ -1,0 +1,28 @@
+﻿@model Topic
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@Model.Title</h1>
+From: @Model.User.UserName
+At: @Model.CreatedAt
+
+<p>@Model.Content</p>
+
+<section>
+    @foreach (var reply in Model.Replies)
+    {
+        <article>
+            <h4>@reply.Title</h4>
+            <p>@reply.Content</p>
+            <div>
+                <p>Author: @reply.User.UserName</p>
+                <time>@reply.CreatedAt</time>
+            </div>
+        </article>
+    }
+
+    <a asp-action="Create" asp-controller="Replies" asp-route-topicId="@Model.Id">
+        Responder
+    </a>
+</section>

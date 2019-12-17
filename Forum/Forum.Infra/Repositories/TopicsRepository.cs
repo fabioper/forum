@@ -42,7 +42,9 @@ namespace Forum.Infra.Repositories
 
         public async Task<Topic> GetByIdAsync(long id)
         {
-            return await _topics.FirstOrDefaultAsync(t => t.Id == id);
+            return await _topics.Include(t => t.Replies)
+                                .ThenInclude(r => (r as Reply).User)
+                                .FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public Task<IEnumerable<Topic>> GetByAsync(string keyword) => throw new NotImplementedException();

@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Topic>
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<a asp-action="Create" asp-controller="Topics">Novo tópico</a>
+
+@if (Model.Any())
+{
+    <section>
+        @foreach (var topic in Model)
+        {
+            <article>
+                <h2>
+                    <a asp-action="Details" asp-controller="Topics" asp-route-id="@topic.Id">
+                        @topic.Title
+                    </a>
+                </h2>
+            </article>
+        }
+    </section>
+}
+else
+{
+    <div>
+        <h1>Esta categoria está vazia.</h1>
+        <p>Crie um novo tópico.</p>
+        <a asp-action="Create" asp-controller="Topics">Novo tópico</a>
+    </div>
+}

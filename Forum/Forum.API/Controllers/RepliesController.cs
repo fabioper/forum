@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/replies")]
     [ApiController]
     public class RepliesController : ControllerBase
     {

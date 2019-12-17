@@ -12,7 +12,7 @@ namespace Forum.Domain.Entities
         }
 
         [Key]
-        public long Id { get; private set; }
+        public long Id { get; set; }
 
         public override bool Equals(object obj)
         {

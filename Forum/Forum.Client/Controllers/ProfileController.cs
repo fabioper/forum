@@ -2,20 +2,50 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Forum.Client.Models;
+using Forum.Infra.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.Client.Controllers
 {
     public class ProfileController : Controller
     {
+        private readonly ApiService _api;
+
+        public ProfileController(ApiService api)
+        {
+            _api = api;
+        }
+
         [Authorize]
-        [HttpGet("myprofile")]
-        public IActionResult MyProfile()
+        [HttpGet("perfil")]
+        public async Task<IActionResult> MyProfile()
+        {
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            var profileUser = await _api.GetCurrentLoggedUser(accessToken);
+
+            return View(profileUser);
+        }
+
+        [HttpGet("perfil/edit")]
+        [Authorize]
+        public async Task<IActionResult> Edit()
+        {
+            var profile = new EditUserViewModel();
+
+            return View(profile);
+        }
+
+        [HttpPost("perfil/edit")]
+        [Authorize]
+        public async Task<IActionResult> Edit(EditUserViewModel vm)
         {
             return View();
         }
+
 
         [Authorize]
         [HttpGet("logout")]
@@ -23,7 +53,7 @@ namespace Forum.Client.Controllers
         {
             await HttpContext.SignOutAsync();
 
-            return RedirectToAction("Index", "Sections");
+            return RedirectToAction("Index", "Categories");
         }
     }
 }

@@ -51,6 +51,7 @@ namespace Forum.API
                 config.CreateMap<CreateTopicViewModel, Topic>();
                 config.CreateMap<CreateGategoryViewModel, Category>();
                 config.CreateMap<CreateSectionViewModel, Section>();
+                config.CreateMap<CreateReplyViewModel, Reply>();
             });
 
             IMapper mapper = autoMapperConfig.CreateMapper();

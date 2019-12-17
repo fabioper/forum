@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.Azure.Storage.Blob
+using Microsoft.Azure.Storage;
 
 namespace Forum.API.Controllers
 {
@@ -26,6 +28,12 @@ namespace Forum.API.Controllers
             var currentUser = await _usersRepository.GetCurrentUser(HttpContext.User);
 
             return Ok(currentUser);
+        }
+
+        [HttpPut("profile")]
+        public async Task<IActionResult> Profile(EditUserViewModel vm)
+        {
+            return Ok();
         }
     }
 }
